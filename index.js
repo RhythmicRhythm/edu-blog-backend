@@ -20,7 +20,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "http://localhost:5174", "http://localhost:5175"
+      "http://localhost:5174", "https://dazzling-cupcake-6525a1.netlify.app/"
     ],
     credentials: true,
   })
