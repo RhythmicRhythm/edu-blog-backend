@@ -31,7 +31,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Please add a photo"],
       default:
-        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.flaticon.com%2Ffree-icon%2Fuser_219983&psig=AOvVaw1KZikR2I82IVZY3dD9OanN&ust=1694169245603000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCMDzsI6nmIEDFQAAAAAdAAAAABAE",
+        "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fen%2Ffree-png-zybui&psig=AOvVaw3cbMtl2gMz1vsG4x90IcLm&ust=1694190641943000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLjLhI72mIEDFQAAAAAdAAAAABAE",
     },
   },
 
