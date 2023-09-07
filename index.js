@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose");
 const postRoute = require("./routes/postRoute");
-const userRoute = require("./routes/userRoute")
+const userRoute = require("./routes/userRoute");
 const errorHandler = require("./middleWare/errorMiddleware");
 const cors = require("cors");
 const app = express();
@@ -20,7 +20,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "http://localhost:5174", "https://dazzling-cupcake-6525a1.netlify.app/"
+      "https://dazzling-cupcake-6525a1.netlify.app", "*"
     ],
     credentials: true,
   })
