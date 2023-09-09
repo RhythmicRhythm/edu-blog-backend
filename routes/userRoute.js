@@ -12,60 +12,59 @@ const generateToken = (id) => {
 
 router.post("/register", async (req, res) => {
   const { fullname, password, email, userImage } = req.body;
-  console.log(req.body);
 
-  // if (!fullname || !email || !password) {
-  //   return res.status(400).json({ error: "please fill all fields" });
-  // }
+  if (!fullname || !email || !password) {
+    return res.status(400).json({ error: "please fill all fields" });
+  }
 
-  // if (password.length < 8) {
-  //   return res
-  //     .status(400)
-  //     .json({ error: "password must be up to 8 characters" });
-  // }
+  if (password.length < 8) {
+    return res
+      .status(400)
+      .json({ error: "password must be up to 8 characters" });
+  }
 
-  // // Check if user email already exists
-  // const userExists = await User.findOne({ email });
+  // Check if user email already exists
+  const userExists = await User.findOne({ email });
 
-  // if (userExists) {
-  //   return res.status(400).json({ error: "email has already been registered" });
-  // }
+  if (userExists) {
+    return res.status(400).json({ error: "email has already been registered" });
+  }
 
-  // // Create new user
-  // const user = await User.create({
-  //   email,
-  //   fullname,
-  //   password,
-  //   userImage,
-  // });
+  // Create new user
+  const user = await User.create({
+    email,
+    fullname,
+    password,
+    userImage,
+  });
 
-  // //   Generate Token
-  // const token = generateToken(user._id);
+  //   Generate Token
+  const token = generateToken(user._id);
 
-  // // Send HTTP-only cookie
-  // res.cookie("token", token, {
-  //   path: "/",
-  //   httpOnly: true,
-  //   expires: new Date(Date.now() + 1000 * 86400), // 1 day
-  //   sameSite: "none",
-  //   secure: true,
-  // });
+  // Send HTTP-only cookie
+  res.cookie("token", token, {
+    path: "/",
+    httpOnly: true,
+    expires: new Date(Date.now() + 1000 * 86400), // 1 day
+    sameSite: "none",
+    secure: true,
+  });
 
-  // if (user) {
-  //   const { _id, fullname, email, password, isAdmin, userImage } = user;
-  //   res.status(200).json({
-  //     _id,
-  //     fullname,
-  //     email,
-  //     password,
-  //     isAdmin,
-  //     userImage,
-  //     token,
-  //   });
-  // } else {
-  //   res.status(400);
-  //   throw new Error("Invalid user data");
-  // }
+  if (user) {
+    const { _id, fullname, email, password, isAdmin, userImage } = user;
+    res.status(200).json({
+      _id,
+      fullname,
+      email,
+      password,
+      isAdmin,
+      userImage,
+      token,
+    });
+  } else {
+    res.status(400);
+    throw new Error("Invalid user data");
+  }
 });
 
 router.post("/login", async (req, res) => {
