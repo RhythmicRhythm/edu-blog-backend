@@ -10,9 +10,16 @@ const cors = require("cors");
 const app = express();
 
 // Middlewares
+// app.use(
+//   bodyParser.urlencoded({
+//     limit: "100mb",
+//     extended: true,
+//   })
+// );
+
 app.use(express.json());
 app.use(cookieParser());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 cors;
@@ -20,7 +27,9 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      "https://dazzling-cupcake-6525a1.netlify.app", "*", "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fen%2Ffree-png-zybui&psig=AOvVaw3cbMtl2gMz1vsG4x90IcLm&ust=1694190641943000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLjLhI72mIEDFQAAAAAdAAAAABAE"
+      "https://dazzling-cupcake-6525a1.netlify.app",
+      "*",
+      "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.pngwing.com%2Fen%2Ffree-png-zybui&psig=AOvVaw3cbMtl2gMz1vsG4x90IcLm&ust=1694190641943000&source=images&cd=vfe&opi=89978449&ved=0CBAQjRxqFwoTCLjLhI72mIEDFQAAAAAdAAAAABAE",
     ],
     credentials: true,
   })

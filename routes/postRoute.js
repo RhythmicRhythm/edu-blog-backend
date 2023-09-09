@@ -4,6 +4,8 @@ const BlogPost = require("../models/postModel");
 const User = require("../models/userModel");
 const cloudinary = require("cloudinary").v2;
 const protect = require("../middleWare/authMiddleware");
+const { upload } = require("../utils/fileUpload");
+
 
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
@@ -12,7 +14,7 @@ cloudinary.config({
   secure: true,
 });
 
-router.post("/", protect, async (req, res) => {
+router.post("/", protect, upload.single("image"), async (req, res) => {
   try {
     const { title, subtitle, content, iimage, tag } = req.body;
 
@@ -36,11 +38,15 @@ router.post("/", protect, async (req, res) => {
       });
       // Create a new instance of the BlogPost model
       const post = await BlogPost.create({
-        author_name,
+        author: req.user.id,
+        name: user.fullname,
+        userimage: user.userImage,
         title,
-        desc,
-        content,
+        subtitle,
+        tag,
         image: result.secure_url,
+        content: content.replace(/\n/g, "<br/>"),
+        iimage,
       });
 
       // Save the new post to the database
