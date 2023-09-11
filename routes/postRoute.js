@@ -127,34 +127,69 @@ router.post("/addcomment/:id", protect, async (req, res) => {
   }
 });
 
-router.put("/updatepost/:id", async (req, res) => {
-  const { title, desc } = req.body;
-
-  if (!title || !desc) {
-    return res
-      .status(400)
-      .json({ error: "Title and description are required" });
-  }
-
+router.put("/:id", protect, upload.single("image"), async (req, res) => {
   try {
-    const updateFields = {
-      title,
-      desc,
-    };
+    const { title, subtitle, content, iimage, tag } = req.body;
 
-    const updatedPost = await BlogPost.findByIdAndUpdate(
-      req.params.id,
-      updateFields,
-      { new: true } // Return the updated document
-    );
-
-    if (!updatedPost) {
+    // Check if the user is authorized to update the post (you may need additional authorization logic)
+    const post = await BlogPost.findById(req.params.id);
+    if (!post) {
       return res.status(404).json({ error: "Post not found" });
     }
+    
+    // You may want to add further authorization logic here to ensure the user can update the post
 
-    return res.status(200).json(updatedPost);
+    const user = await User.findById(req.user.id);
+
+    if (!title || !subtitle || !content || !tag) {
+      return res.status(400).json({ error: "Title, Description & content are required" });
+    }
+
+    let fileData = {};
+
+    if (req.file) {
+      // Upload image to Cloudinary and apply transformations
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "edu",
+        transformation: [
+          { width: 1080, height: 1080, quality: 80, crop: "fill" },
+        ],
+      });
+      
+      // Update the existing post with the new data
+      post.author = req.user.id;
+      post.name = user.fullname;
+      post.userimage = user.userImage;
+      post.title = title;
+      post.subtitle = subtitle;
+      post.tag = tag;
+      post.image = result.secure_url;
+      post.content = content.replace(/\n/g, "<br/>");
+      post.iimage = iimage;
+      
+      await post.save();
+
+      // Return the updated post
+      return res.status(200).json(post);
+    } else {
+      // Update the existing post with the new data (excluding the image)
+      post.author = req.user.id;
+      post.name = user.fullname;
+      post.userimage = user.userImage;
+      post.title = title;
+      post.subtitle = subtitle;
+      post.tag = tag;
+      post.content = content.replace(/\n/g, "<br/>");
+      post.iimage = iimage;
+
+      await post.save();
+
+      // Return the updated post
+      return res.status(200).json(post);
+    }
   } catch (error) {
     return res.status(500).json({ error: error.message });
+    console.log(error);
   }
 });
 
